@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A clear, group-aware weekly timetable for class 2ap." />
+  <meta name="theme-color" content="#0b1020" />
+  <title>2ap Timetable</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b1020'/%3E%3Cpath d='M18 15v8M46 15v8M14 25h36v25H14z' fill='none' stroke='%237cdbb4' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M23 34h6v6h-6zm12 0h6v6h-6z' fill='%23ffce73'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="2ap timetable home">
+        <span class="brand-mark" aria-hidden="true">2a</span>
+        <span><strong>My timetable</strong><small>Class 2ap</small></span>
+      </a>
+      <button class="icon-button" id="themeButton" type="button" aria-label="Switch color theme" title="Switch color theme">
+        <span aria-hidden="true" id="themeIcon">☀</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="status-card" aria-live="polite">
+        <div class="status-copy">
+          <p class="eyebrow" id="todayLabel">TODAY</p>
+          <h1 id="statusTitle">Loading your day…</h1>
+          <p id="statusDetail">Checking the current lesson.</p>
+        </div>
+        <div class="clock" id="clock">--:--</div>
+      </section>
+
+      <section class="controls" aria-label="Timetable controls">
+        <div class="group-switch" role="group" aria-label="Choose your group">
+          <button type="button" data-group="1" aria-pressed="true">Group 1</button>
+          <button type="button" data-group="2" aria-pressed="false">Group 2</button>
+        </div>
+        <button class="today-button" id="todayButton" type="button">Jump to today</button>
+      </section>
+
+      <nav class="day-tabs" id="dayTabs" aria-label="Choose a day"></nav>
+
+      <section class="schedule-head">
+        <div>
+          <p class="eyebrow" id="selectedDate">WEEKLY SCHEDULE</p>
+          <h2 id="dayHeading">Monday</h2>
+        </div>
+        <p class="lesson-count" id="lessonCount"></p>
+      </section>
+
+      <section class="timeline" id="timeline" aria-label="Lessons"></section>
+    </main>
+
+    <footer>Times and rooms copied from your school timetable.</footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
