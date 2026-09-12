@@ -9,30 +9,30 @@ const common = (subject, room) => ({ subject, room, group: 0 });
 const grouped = (group, subject, room) => ({ subject, room, group });
 const timetable = [
   {
-    name: "Monday", short: "Mon", lessons: {
+    name: "Poniedziałek", short: "Pon", lessons: {
       1: [grouped(1, "Język angielski", "44")],
       2: [common("Godzina wychowawcza", "29")],
       3: [common("Aplikacje — wykład", "35")],
       4: [common("Matematyka", "19")],
       5: [common("Matematyka", "19")],
-      6: [grouped(1, "Aplikacje — pracownia", "26"), grouped(2, "Wychowanie fizyczne", "Gym")],
-      7: [grouped(1, "Aplikacje — pracownia", "26"), grouped(2, "Wychowanie fizyczne", "Gym")],
+      6: [grouped(1, "Aplikacje — pracownia", "26"), grouped(2, "Wychowanie fizyczne", "gim.")],
+      7: [grouped(1, "Aplikacje — pracownia", "26"), grouped(2, "Wychowanie fizyczne", "gim.")],
       8: [grouped(1, "Informatyka", "26"), grouped(2, "Język angielski", "23")]
     }
   },
   {
-    name: "Tuesday", short: "Tue", lessons: {
+    name: "Wtorek", short: "Wt", lessons: {
       0: [grouped(1, "Język angielski", "44"), grouped(2, "Aplikacje — pracownia", "37")],
       1: [grouped(1, "Język niemiecki", "23"), grouped(2, "Aplikacje — pracownia", "37")],
       2: [grouped(1, "Programowanie obiektowe — pracownia", "41"), grouped(2, "Język niemiecki", "44")],
       3: [common("Matematyka", "36")],
       4: [common("Matematyka", "36")],
-      5: [grouped(1, "Wychowanie fizyczne", "Gym"), grouped(2, "Język angielski", "31")],
-      6: [grouped(1, "Wychowanie fizyczne", "Gym"), grouped(2, "Informatyka", "40")]
+      5: [grouped(1, "Wychowanie fizyczne", "gim."), grouped(2, "Język angielski", "31")],
+      6: [grouped(1, "Wychowanie fizyczne", "gim."), grouped(2, "Informatyka", "40")]
     }
   },
   {
-    name: "Wednesday", short: "Wed", lessons: {
+    name: "Środa", short: "Śr", lessons: {
       0: [grouped(1, "Bazy danych — pracownia", "40"), grouped(2, "Programowanie obiektowe — pracownia", "37")],
       1: [common("Bazy danych — wykład", "18")],
       2: [common("Programowanie obiektowe — wykład", "21")],
@@ -43,18 +43,18 @@ const timetable = [
     }
   },
   {
-    name: "Thursday", short: "Thu", lessons: {
+    name: "Czwartek", short: "Czw", lessons: {
       1: [grouped(1, "Język obcy zawodowy", "44"), grouped(2, "Język niemiecki", "23")],
       2: [common("Język polski", "38")],
       3: [common("Edukacja obywatelska", "39")],
       4: [common("Chemia", "21")],
       5: [common("Fizyka", "19")],
-      6: [grouped(1, "Wychowanie fizyczne", "Gym"), grouped(2, "Projektowanie oprogramowania — pracownia", "37")],
-      7: [grouped(2, "Wychowanie fizyczne", "Gym")]
+      6: [grouped(1, "Wychowanie fizyczne", "gim."), grouped(2, "Projektowanie oprogramowania — pracownia", "37")],
+      7: [grouped(2, "Wychowanie fizyczne", "gim.")]
     }
   },
   {
-    name: "Friday", short: "Fri", lessons: {
+    name: "Piątek", short: "Pt", lessons: {
       2: [grouped(2, "Bazy danych — pracownia", "41")],
       3: [common("Edukacja zdrowotna", "15")],
       4: [common("Projektowanie oprogramowania — wykład", "17")],
@@ -95,16 +95,22 @@ function lessonsFor(dayIndex = selectedDay) {
 function renderTabs() {
   $("#dayTabs").innerHTML = timetable.map((day, index) => `
     <button type="button" data-day="${index}" aria-selected="${index === selectedDay}">
-      <span>${day.short}</span><small>${lessonsFor(index).length} lessons</small>
+      <span>${day.short}</span><small>${lessonLabel(lessonsFor(index).length)}</small>
     </button>
   `).join("");
+}
+
+function lessonLabel(count) {
+  if (count === 1) return "1 lekcja";
+  if (count >= 2 && count <= 4) return `${count} lekcje`;
+  return `${count} lekcji`;
 }
 
 function renderSchedule() {
   const day = timetable[selectedDay];
   const lessons = lessonsFor();
   $("#dayHeading").textContent = day.name;
-  $("#lessonCount").textContent = `${lessons.length} ${lessons.length === 1 ? "lesson" : "lessons"}`;
+  $("#lessonCount").textContent = lessonLabel(lessons.length);
   const today = weekdayIndex();
   const now = warsawNow();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
@@ -112,24 +118,24 @@ function renderSchedule() {
   $("#timeline").innerHTML = lessons.length ? lessons.map(({ period, lesson }) => {
     const [start, end] = times[period];
     const isCurrent = selectedDay === today && nowMinutes >= minutes(start) && nowMinutes < minutes(end);
-    const lab = lesson.subject.includes("pracownia") ? "Lab / workshop" : lesson.subject.includes("wykład") ? "Lecture" : `Period ${period}`;
+    const type = lesson.subject.includes("pracownia") ? "Pracownia" : lesson.subject.includes("wykład") ? "Wykład" : `Lekcja ${period}`;
     return `<article class="lesson${isCurrent ? " current" : ""}">
-      <div class="time"><strong>${start}</strong><small>to ${end}</small></div>
-      <div class="subject"><strong>${lesson.subject}</strong><small>${isCurrent ? "Happening now" : lab}</small></div>
-      <div class="room"><small>Room</small>${lesson.room}</div>
+      <div class="time"><strong>${start}</strong><small>do ${end}</small></div>
+      <div class="subject"><strong>${lesson.subject}</strong><small>${isCurrent ? "Trwa teraz" : type}</small></div>
+      <div class="room"><small>Sala</small>${lesson.room}</div>
     </article>`;
-  }).join("") : `<div class="empty">No lessons for Group ${selectedGroup} on ${day.name}.</div>`;
+  }).join("") : `<div class="empty">Brak lekcji dla grupy ${selectedGroup}.</div>`;
 }
 
 function updateStatus() {
   const now = warsawNow();
   const today = weekdayIndex();
-  $("#clock").textContent = now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
-  $("#todayLabel").textContent = now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }).toUpperCase();
+  $("#clock").textContent = now.toLocaleTimeString("pl-PL", { hour: "2-digit", minute: "2-digit" });
+  $("#todayLabel").textContent = now.toLocaleDateString("pl-PL", { weekday: "long", day: "numeric", month: "long" }).toUpperCase();
 
   if (today < 0) {
-    $("#statusTitle").textContent = "No classes today";
-    $("#statusDetail").textContent = "Your next school day is Monday.";
+    $("#statusTitle").textContent = "Dziś nie ma lekcji";
+    $("#statusDetail").textContent = "Następny dzień szkolny: poniedziałek.";
     return;
   }
 
@@ -140,14 +146,14 @@ function updateStatus() {
 
   if (current) {
     $("#statusTitle").textContent = current.lesson.subject;
-    $("#statusDetail").textContent = `Now · until ${times[current.period][1]} · Room ${current.lesson.room}`;
+    $("#statusDetail").textContent = `Teraz · do ${times[current.period][1]} · sala ${current.lesson.room}`;
   } else if (next) {
     const wait = minutes(times[next.period][0]) - nowMinutes;
     $("#statusTitle").textContent = next.lesson.subject;
-    $("#statusDetail").textContent = `Next in ${wait} min · ${times[next.period][0]} · Room ${next.lesson.room}`;
+    $("#statusDetail").textContent = `Następna za ${wait} min · ${times[next.period][0]} · sala ${next.lesson.room}`;
   } else {
-    $("#statusTitle").textContent = "Classes are finished";
-    $("#statusDetail").textContent = "You’re done for today.";
+    $("#statusTitle").textContent = "Lekcje na dziś skończone";
+    $("#statusDetail").textContent = "To wszystko na dzisiaj.";
   }
 }
 
@@ -179,10 +185,10 @@ $("#todayButton").addEventListener("click", () => {
   render();
 });
 
-const savedTheme = localStorage.getItem("timetable-theme");
-if (savedTheme === "light") document.documentElement.dataset.theme = "light";
 function syncThemeIcon() {
-  $("#themeIcon").textContent = document.documentElement.dataset.theme === "light" ? "☾" : "☀";
+  const dark = document.documentElement.dataset.theme === "dark";
+  $("#themeIcon").textContent = dark ? "☀" : "☾";
+  $("#themeButton").setAttribute("aria-label", dark ? "Włącz jasny motyw" : "Włącz ciemny motyw");
 }
 $("#themeButton").addEventListener("click", () => {
   const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
