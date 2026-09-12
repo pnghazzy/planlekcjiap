@@ -1,61 +1,64 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="A clear, group-aware weekly timetable for class 2ap." />
-  <meta name="theme-color" content="#0b1020" />
-  <title>2ap Timetable</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230b1020'/%3E%3Cpath d='M18 15v8M46 15v8M14 25h36v25H14z' fill='none' stroke='%237cdbb4' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M23 34h6v6h-6zm12 0h6v6h-6z' fill='%23ffce73'/%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet" />
+  <meta name="description" content="Czytelny plan lekcji klasy 2ap z podziałem na grupy." />
+  <meta name="theme-color" content="#f2f2ef" />
+  <title>Plan lekcji 2ap</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='8' fill='%233b5bff'/%3E%3Cpath d='M16 20h32M16 32h24M16 44h18' fill='none' stroke='white' stroke-width='6'/%3E%3C/svg%3E" />
+  <script>
+    (() => {
+      const saved = localStorage.getItem("timetable-theme");
+      document.documentElement.dataset.theme = saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <a class="brand" href="#" aria-label="2ap timetable home">
-        <span class="brand-mark" aria-hidden="true">2a</span>
-        <span><strong>My timetable</strong><small>Class 2ap</small></span>
+      <a class="brand" href="#" aria-label="Plan lekcji klasy 2ap">
+        <span class="brand-mark" aria-hidden="true">2A</span>
+        <span class="brand-copy"><strong>PLAN LEKCJI</strong><small>Klasa 2ap</small></span>
       </a>
-      <button class="icon-button" id="themeButton" type="button" aria-label="Switch color theme" title="Switch color theme">
-        <span aria-hidden="true" id="themeIcon">☀</span>
+      <button class="icon-button" id="themeButton" type="button" aria-label="Zmień motyw" title="Zmień motyw">
+        <span aria-hidden="true" id="themeIcon">◐</span>
       </button>
     </header>
 
     <main>
       <section class="status-card" aria-live="polite">
         <div class="status-copy">
-          <p class="eyebrow" id="todayLabel">TODAY</p>
-          <h1 id="statusTitle">Loading your day…</h1>
-          <p id="statusDetail">Checking the current lesson.</p>
+          <p class="eyebrow" id="todayLabel">DZISIAJ</p>
+          <h1 id="statusTitle">Sprawdzam plan…</h1>
+          <p id="statusDetail">Chwila.</p>
         </div>
-        <div class="clock" id="clock">--:--</div>
+        <time class="clock" id="clock">--:--</time>
       </section>
 
-      <section class="controls" aria-label="Timetable controls">
-        <div class="group-switch" role="group" aria-label="Choose your group">
-          <button type="button" data-group="1" aria-pressed="true">Group 1</button>
-          <button type="button" data-group="2" aria-pressed="false">Group 2</button>
+      <section class="controls" aria-label="Ustawienia planu">
+        <div class="group-switch" role="group" aria-label="Wybierz grupę">
+          <button type="button" data-group="1" aria-pressed="true">Grupa 1</button>
+          <button type="button" data-group="2" aria-pressed="false">Grupa 2</button>
         </div>
-        <button class="today-button" id="todayButton" type="button">Jump to today</button>
+        <button class="today-button" id="todayButton" type="button">Przejdź do dzisiaj</button>
       </section>
 
-      <nav class="day-tabs" id="dayTabs" aria-label="Choose a day"></nav>
+      <nav class="day-tabs" id="dayTabs" aria-label="Wybierz dzień tygodnia"></nav>
 
       <section class="schedule-head">
         <div>
-          <p class="eyebrow" id="selectedDate">WEEKLY SCHEDULE</p>
-          <h2 id="dayHeading">Monday</h2>
+          <p class="eyebrow">PLAN TYGODNIA</p>
+          <h2 id="dayHeading">Poniedziałek</h2>
         </div>
         <p class="lesson-count" id="lessonCount"></p>
       </section>
 
-      <section class="timeline" id="timeline" aria-label="Lessons"></section>
+      <section class="timeline" id="timeline" aria-label="Lekcje"></section>
     </main>
 
-    <footer>hi lol.</footer>
+    <footer>Plan dla klasy 2ap <span aria-hidden="true">·</span> godziny według czasu polskiego</footer>
   </div>
   <script src="app.js"></script>
 </body>
